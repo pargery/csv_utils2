@@ -16,13 +16,6 @@ class SimpleCSVReporter:
         self.indenter = None
         self.total_levels = 0
 
-    def write_line(self, msg):
-        self.report_fd.write('{0:s}\n'.format(msg))
-
-    def write_indent(self, level, msg, total):
-        outmsg = self.indenter.indent_message(level, msg, total)
-        self.write_line(outmsg)
-
     def readCSV(self, path):
         with open(path) as f:
             r = csv.DictReader(f)
@@ -46,19 +39,34 @@ class SimpleCSVReporter:
                         self.count_of_values[tup] += 1
                         self.possible_tuples[level].add(tup)
 
+    # This is a stub for a method that
+    #   would look up the value,
+    #   or apply some word formatting.
+    #   e.g. 'with {0:s}'.format(word)
     def word_message(self, word):
         return word
 
-    # eventually would call a way to join the values returned by word_message
+    # This is also a stub for a more method
+    #   that could define a special way
+    #   to join the values returned
+    #   by word_message
     def combo_message(self, combo):
         """
-        This could eventually be a more complex method
         :param combo: tuple for returned string
         """
         msg = ' '.join(combo)
         return msg
 
-    # Here we will use recursion..
+    # Write to the class-var file descriptor
+    def write_line(self, msg):
+        self.report_fd.write('{0:s}\n'.format(msg))
+
+    # Uses the class-var IndentMessages object
+    def write_indent(self, level, msg, total):
+        outmsg = self.indenter.indent_message(level, msg, total)
+        self.write_line(outmsg)
+
+    # Here we will use recursion to print indented combo & sums
     def write_sub_levels(self, combo_start):
         level = len(combo_start)
         head = self.headers[level]
@@ -96,6 +104,12 @@ def test_crime_stats():
 
 
 def test_csv(inpath, outpath, line_width=0):
+    """
+    Test SimpleCSVReporter for input CSV
+    :param inpath: path to input CSV file
+    :param outpath: path to output report text
+    :param line_width: desired report line-width
+    """
     test = SimpleCSVReporter()
     test.readCSV(inpath)
     indent_tool = IndentMessages.IndentMessages()

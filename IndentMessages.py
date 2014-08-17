@@ -7,7 +7,8 @@ class IndentMessages:
         # width of space in which to print the SUM (%d)
         self.number_width = 4
 
-        # desired total width of [spaces][message][sum] line written to a report
+        # desired total width of [spaces][message][sum]
+        #  line written to a report
         self.total_width = 40
 
     def indent_message(self, level, msg, sum):
@@ -17,9 +18,10 @@ class IndentMessages:
             num_spaces = (level - 1) * self.space_per_indent
 
         msg_width  = self.total_width - num_spaces
+        assert msg_width > 0,"Indentation greater than total message width"
 
-
-        format_str='{{0:s}}{{1:{0:d}s}}{{2:-{1:d}d}}'.format(msg_width,self.number_width)
+        format_str='{{0:s}}{{1:{0:d}s}}{{2:-{1:d}d}}'.format(
+            msg_width,self.number_width)
         #print 'DEBUG: Using format string {0:s}'.format(format_str)
 
         spaces = self.space_char * num_spaces
